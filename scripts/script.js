@@ -1,34 +1,29 @@
 var cvs = document.getElementById("canvas");
 var ctx = cvs.getContext("2d");
 
-// load images
-
-var bird = new Image();
+//Carregar imagens
+var butterfly = new Image();
 var bg = new Image();
 var fg = new Image();
 var pipeNorth = new Image();
 var pipeSouth = new Image();
 
-bird.src = "images/bird.png";
+butterfly.src = "images/butterfly.png";
 bg.src = "images/bg.png";
 fg.src = "images/fg.png";
-pipeNorth.src = "images/pipeNorth.png";
-pipeSouth.src = "images/pipeSouth.png";
+pipeNorth.src = "images/treeNorth.png";
+pipeSouth.src = "images/treeSouth.png";
 
-
-// some variables
-
+//Variaves de intervalo, posicao, pontuacao e queda
 var gap = 85;
 var constant;
 
 var bX = 10;
 var bY = 150;
 
-var gravity = 1.5;
+var gravity = 1;
 
 var score = 0;
-
-// audio files
 
 var fly = new Audio();
 var scor = new Audio();
@@ -36,8 +31,7 @@ var scor = new Audio();
 fly.src = "sounds/fly.mp3";
 scor.src = "sounds/score.mp3";
 
-// on key down
-
+//Se pressionar qualquer tecla, sobe
 document.addEventListener("keydown",moveUp);
 
 function moveUp(){
@@ -45,44 +39,41 @@ function moveUp(){
     fly.play();
 }
 
-// pipe coordinates
+//Coordenadas da arvore
+var tree = [];
 
-var pipe = [];
-
-pipe[0] = {
+tree[0] = {
     x : cvs.width,
     y : 0
 };
 
-// draw images
-
+//Funcao que posiciona as imagens
 function draw(){
     
     ctx.drawImage(bg,0,0);
     
     
-    for(var i = 0; i < pipe.length; i++){
+    for(var i = 0; i < tree.length; i++){
         
         constant = pipeNorth.height+gap;
-        ctx.drawImage(pipeNorth,pipe[i].x,pipe[i].y);
-        ctx.drawImage(pipeSouth,pipe[i].x,pipe[i].y+constant);
+        ctx.drawImage(pipeNorth,tree[i].x,tree[i].y);
+        ctx.drawImage(pipeSouth,tree[i].x,tree[i].y+constant);
              
-        pipe[i].x--;
+        tree[i].x--;
         
-        if( pipe[i].x == 125 ){
-            pipe.push({
+        if( tree[i].x == 125 ){
+            tree.push({
                 x : cvs.width,
                 y : Math.floor(Math.random()*pipeNorth.height)-pipeNorth.height
             }); 
         }
 
-        // detect collision
-        
-        if( bX + bird.width >= pipe[i].x && bX <= pipe[i].x + pipeNorth.width && (bY <= pipe[i].y + pipeNorth.height || bY+bird.height >= pipe[i].y+constant) || bY + bird.height >=  cvs.height - fg.height){
-            location.reload(); // reload the page
+        //Colisao, recarrega a pagina
+        if( bX + butterfly.width >= tree[i].x && bX <= tree[i].x + pipeNorth.width && (bY <= tree[i].y + pipeNorth.height || bY+butterfly.height >= tree[i].y+constant) || bY + butterfly.height >=  cvs.height - fg.height){
+            location.reload();
         }
         
-        if(pipe[i].x == 5){
+        if(tree[i].x == 5){
             score++;
             scor.play();
         }
@@ -92,12 +83,12 @@ function draw(){
 
     ctx.drawImage(fg,0,cvs.height - fg.height);
     
-    ctx.drawImage(bird,bX,bY);
+    ctx.drawImage(butterfly,bX,bY);
     
     bY += gravity;
     
     ctx.fillStyle = "#000";
-    ctx.font = "20px Verdana";
+    ctx.font = "20px Arial";
     ctx.fillText("Score : "+score,10,cvs.height-20);
     
     requestAnimationFrame(draw);
