@@ -1,19 +1,17 @@
 const cvs = document.getElementById("snake");
 const ctx = cvs.getContext("2d");
 
-// create the unit
+// Cria a caixa onde andara a cobra
 const box = 32;
 
-// load images
-
+// Carrega imagens
 const ground = new Image();
 ground.src = "images/ground.png";
 
 const foodImg = new Image();
 foodImg.src = "images/food.png";
 
-// load audio files
-
+// Carrega audio
 let dead = new Audio();
 let eat = new Audio();
 let up = new Audio();
@@ -28,8 +26,7 @@ right.src = "audio/right.mp3";
 left.src = "audio/left.mp3";
 down.src = "audio/down.mp3";
 
-// create the snake
-
+// Cria a cobra
 let snake = [];
 
 snake[0] = {
@@ -37,19 +34,16 @@ snake[0] = {
     y : 10 * box
 };
 
-// create the food
-
+// Cria a comida
 let food = {
     x : Math.floor(Math.random()*17+1) * box,
     y : Math.floor(Math.random()*15+3) * box
 }
 
-// create the score var
-
+// Cria a pontuacao
 let score = 0;
 
-//control the snake
-
+//Controla a cobra baseada na numeracao das teclas pressionadas
 let d;
 
 document.addEventListener("keydown",direction);
@@ -71,7 +65,7 @@ function direction(event){
     }
 }
 
-// cheack collision function
+// Checa se ha colisao
 function collision(head,array){
     for(let i = 0; i < array.length; i++){
         if(head.x == array[i].x && head.y == array[i].y){
@@ -81,33 +75,30 @@ function collision(head,array){
     return false;
 }
 
-// draw everything to the canvas
-
-function draw(){
-    
-    ctx.drawImage(ground,0,0);
-    
+// Funcao que desenha tudo no canvas
+function draw(){   
+    ctx.drawImage(ground,0,0);   
     for( let i = 0; i < snake.length ; i++){
         ctx.fillStyle = ( i == 0 )? "green" : "white";
         ctx.fillRect(snake[i].x,snake[i].y,box,box);
         
         ctx.strokeStyle = "red";
         ctx.strokeRect(snake[i].x,snake[i].y,box,box);
-    }
-    
+    }  
+    //Desenha a comida em locais aleatorios
     ctx.drawImage(foodImg, food.x, food.y);
     
-    // old head position
+    // Antiga posicao da cabeca da cobra
     let snakeX = snake[0].x;
     let snakeY = snake[0].y;
     
-    // which direction
+    // Desenha a cobra de acordo com a direcao
     if( d == "LEFT") snakeX -= box;
     if( d == "UP") snakeY -= box;
     if( d == "RIGHT") snakeX += box;
     if( d == "DOWN") snakeY += box;
     
-    // if the snake eats the food
+    // Se a cobra come comida, aumenta a pontuacao, cria a comida em um novo lugar e aumenta a cobra adicionando nova cabeca
     if(snakeX == food.x && snakeY == food.y){
         score++;
         eat.play();
@@ -115,26 +106,21 @@ function draw(){
             x : Math.floor(Math.random()*17+1) * box,
             y : Math.floor(Math.random()*15+3) * box
         }
-        // we don't remove the tail
     }else{
-        // remove the tail
         snake.pop();
     }
     
-    // add new Head
-    
+    // Adiciona nova cabeca
     let newHead = {
         x : snakeX,
         y : snakeY
     }
     
-    // game over
-    
+    // Fim do jogo se colisao
     if(snakeX < box || snakeX > 17 * box || snakeY < 3*box || snakeY > 17*box || collision(newHead,snake)){
         clearInterval(game);
         dead.play();
-    }
-    
+    }  
     snake.unshift(newHead);
     
     ctx.fillStyle = "white";
@@ -142,6 +128,5 @@ function draw(){
     ctx.fillText(score,2*box,1.6*box);
 }
 
-// call draw function every 100 ms
-
+// Chama a funcao que desenha tudo a cada 100ms
 let game = setInterval(draw,100);
