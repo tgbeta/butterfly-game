@@ -28,8 +28,8 @@ var score = 0;
 var fly = new Audio();
 var scor = new Audio();
 
-fly.src = "sounds/fly.mp3";
-scor.src = "sounds/score.mp3";
+fly.src = "audio/fly.mp3";
+scor.src = "audio/score.mp3";
 
 //Se pressionar qualquer tecla, sobe
 document.addEventListener("keydown",moveUp);
